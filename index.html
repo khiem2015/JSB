@@ -407,7 +407,186 @@
             color: var(--primary-cyan);
         }
 
-        /* Responsive */
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(255, 0, 255, 0.1) 100%);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 50px;
+            padding: 15px 20px;
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.4), inset 0 0 20px rgba(0, 217, 255, 0.1);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            max-width: 350px;
+        }
+
+        .music-player:hover {
+            box-shadow: 0 0 50px rgba(0, 217, 255, 0.6), inset 0 0 20px rgba(0, 217, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .music-player.expanded {
+            max-width: 400px;
+            padding: 20px;
+            border-radius: 20px;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        .player-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .player-title {
+            color: var(--primary-cyan);
+            font-weight: bold;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .player-title i {
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .expand-btn {
+            background: none;
+            border: none;
+            color: var(--primary-magenta);
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-btn.active {
+            transform: rotate(180deg);
+        }
+
+        .player-content {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .player-content.show {
+            display: block;
+        }
+
+        .playlist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .playlist-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(0, 217, 255, 0.05);
+            border-left: 3px solid var(--primary-magenta);
+            color: var(--primary-cyan);
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .playlist-item:hover {
+            background: rgba(0, 217, 255, 0.15);
+            border-left-color: var(--primary-lime);
+            transform: translateX(5px);
+        }
+
+        .playlist-item.playing {
+            background: rgba(0, 217, 255, 0.3);
+            border-left-color: var(--primary-lime);
+            font-weight: bold;
+        }
+
+        .player-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .player-btn {
+            background: linear-gradient(135deg, var(--primary-magenta), var(--primary-cyan));
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .player-btn:hover {
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* Added audio element styles */
+        #audioPlayer {
+            display: none;
+        }
+
+        .volume-control {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .volume-control input {
+            flex: 1;
+            height: 5px;
+            cursor: pointer;
+        }
+
+        .volume-value {
+            color: var(--primary-cyan);
+            font-size: 0.8rem;
+            min-width: 30px;
+        }
+
+        .play-pause-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--primary-magenta));
+            color: var(--dark-bg);
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .play-pause-btn:hover {
+            box-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+            transform: scale(1.05);
+        }
+
+        .track-info {
+            text-align: center;
+            color: var(--primary-magenta);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -432,6 +611,18 @@
 
             .game-card h3 {
                 font-size: 1.3rem;
+            }
+
+            .music-player {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 15px;
+            }
+
+            .music-player.expanded {
+                max-width: 320px;
+                bottom: 20px;
+                right: 20px;
             }
         }
     </style>
@@ -569,33 +760,26 @@
         </section>
 
         <!-- Game Detail Modals -->
-        <div id="gameDetailsModal" class="modal fade" tabindex="-1">
-            <div class="modal-dialog modal-xl">
-                <div class="modal-content" style="background: linear-gradient(135deg, rgba(26, 31, 58, 0.95), rgba(42, 36, 76, 0.95)); border: 2px solid var(--primary-cyan); color: #e0e0e0;">
-                    <div class="modal-header border-bottom border-cyan">
-                        <h5 class="modal-title" id="gameTitle" style="background: linear-gradient(90deg, var(--primary-cyan), var(--primary-magenta)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;"></h5>
+        <div class="modal fade" id="gameDetailsModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" style="background: linear-gradient(135deg, #1a1f3a 0%, #2a244c 100%); border: 2px solid var(--primary-cyan); box-shadow: 0 0 30px rgba(0, 217, 255, 0.5);">
+                    <!-- Fixed header styling -->
+                    <div class="modal-header" style="border-bottom: 2px solid var(--primary-cyan);">
+                        <h5 class="modal-title" id="gameTitle" style="color: var(--primary-cyan);"></h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5 style="color: var(--primary-magenta);">About the Game</h5>
-                                <p id="gameDescription"></p>
-
-                                <h5 style="color: var(--primary-lime); margin-top: 20px;">How to Play</h5>
-                                <p id="gameHowToPlay"></p>
-                            </div>
-                            <div class="col-md-6">
-                                <h5 style="color: var(--primary-orange);">PC Requirements</h5>
-                                <div style="background: rgba(0, 217, 255, 0.1); padding: 15px; border-radius: 10px; border-left: 3px solid var(--primary-cyan);">
-                                    <p id="gameRequirements"></p>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="modal-body" style="color: #e0e0e0;">
+                        <div id="gameContent"></div>
                     </div>
-                    <div class="modal-footer border-top border-cyan">
-                        <a id="wikiLink" href="#" target="_blank" class="btn btn-learn">Visit Wiki</a>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <div class="modal-footer" style="border-top: 2px solid var(--primary-cyan);">
+                        <!-- Fixed Visit Wiki button to open link properly -->
+                        <button type="button" class="btn btn-primary" id="wikiButton" style="background: linear-gradient(90deg, var(--primary-cyan), var(--primary-magenta)); border: none; color: #000; font-weight: bold;" onclick="openWiki()">
+                            Visit Wiki
+                        </button>
+                        <!-- Fixed Close button with proper Bootstrap 5 syntax -->
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
@@ -605,68 +789,184 @@
         <footer>
             <p>&copy; 2025 Roblox Games Hub | Learn • Play • Master | Made with ❤️</p>
         </footer>
+
+        <!-- Music Player Widget -->
+        <div class="music-player" id="musicPlayer">
+            <div class="player-header" onclick="togglePlayer()">
+                <div class="player-title">
+                    <i class="fas fa-music"></i>
+                    <span id="playerStatus">Now Playing</span>
+                </div>
+                <button class="expand-btn" id="expandBtn">
+                    <i class="fas fa-chevron-up"></i>
+                </button>
+            </div>
+            <div class="player-content" id="playerContent">
+                <!-- Replaced old YouTube player with audio player -->
+                <audio id="audioPlayer" loop></audio>
+                <div class="track-info" id="trackInfo">Loading...</div>
+                <button class="play-pause-btn" id="playPauseBtn" onclick="togglePlayPause()">
+                    <i class="fas fa-play"></i> Play
+                </button>
+                <ul class="playlist" id="playlist">
+                    <!-- Playlist items will be populated by JavaScript -->
+                </ul>
+                <div class="player-controls">
+                    <button class="player-btn" onclick="previousTrack()">
+                        <i class="fas fa-step-backward"></i> Prev
+                    </button>
+                    <button class="player-btn" onclick="nextTrack()">
+                        Next <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+                <div class="volume-control">
+                    <i class="fas fa-volume-down" style="color: var(--primary-magenta);"></i>
+                    <input type="range" id="volumeControl" min="0" max="100" value="50" onchange="setVolume(this.value)">
+                    <span class="volume-value" id="volumeValue">50%</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Game Data
         const gamesData = {
             doors: {
-                title: '🚪 DOORS',
-                description: 'DOORS is a thrilling horror-puzzle game where you must navigate through endless rooms filled with mysterious creatures and solve complex puzzles. Each door leads to new challenges and secrets. The game combines elements of mystery, horror, and adventure.',
-                howToPlay: '1. Enter rooms and solve puzzles\n2. Avoid or hide from creatures\n3. Collect items to help your journey\n4. Progress through endless doors\n5. Discover the mystery behind the game',
-                requirements: 'Minimum: 2GB RAM, Intel Core i5, 10GB Storage\nRecommended: 8GB RAM, RTX 2060, 15GB SSD',
-                wiki: 'https://roblox.fandom.com/wiki/Doors'
+                name: "DOORS",
+                intro: "DOORS is a thrilling horror-puzzle adventure game where you navigate through mysterious doors, solving puzzles and uncovering secrets.",
+                howToPlay: "Navigate through different rooms, solve environmental puzzles, interact with objects, and collect clues. Avoid obstacles and uncover the mystery behind each door.",
+                requirements: {
+                    cpu: "Intel i5 / AMD Ryzen 5",
+                    ram: "8 GB",
+                    gpu: "GTX 1050 / RX 560",
+                    storage: "5 GB"
+                },
+                wiki: "https://roblox.fandom.com/wiki/Doors"
             },
             garden: {
-                title: '🌱 Grow a Garden',
-                description: 'A relaxing and peaceful gardening simulation game. Plant various flowers and vegetables, water your crops, and watch them grow. Customize your garden with decorations and create the garden of your dreams.',
-                howToPlay: '1. Select seeds from the shop\n2. Plant them in your garden\n3. Water your plants regularly\n4. Harvest when ready\n5. Decorate and expand your garden',
-                requirements: 'Minimum: 1GB RAM, Any Modern Processor, 5GB Storage\nRecommended: 4GB RAM, Intel Core i7, 10GB SSD',
-                wiki: 'https://roblox.fandom.com/wiki/Grow_a_Garden'
+                name: "Grow a Garden",
+                intro: "A relaxing life simulation game where you can cultivate your own virtual garden, grow various plants, and create a peaceful sanctuary.",
+                howToPlay: "Plant seeds, water your plants, manage your garden space, collect special plants, and decorate your garden area with various items.",
+                requirements: {
+                    cpu: "Intel i3 / AMD Ryzen 3",
+                    ram: "4 GB",
+                    gpu: "Integrated Graphics",
+                    storage: "2 GB"
+                },
+                wiki: "https://roblox.fandom.com/wiki/Grow_a_Garden"
             },
             disaster: {
-                title: '⛰️ Natural Disaster',
-                description: 'Test your survival skills as natural disasters strike! Earthquakes, tsunamis, tornados, and more threaten your survival. Work with other players to survive and escape before the disaster claims you.',
-                howToPlay: '1. Wait for disaster to strike\n2. Find safe zones\n3. Avoid falling debris\n4. Reach evacuation points\n5. Survive and win rewards',
-                requirements: 'Minimum: 3GB RAM, Intel Core i5, 8GB Storage\nRecommended: 8GB RAM, RTX 1060, 15GB SSD',
-                wiki: 'https://roblox.fandom.com/wiki/Natural_Disaster_Survival'
+                name: "Natural Disaster",
+                intro: "Experience intense survival gameplay as you navigate through catastrophic natural disasters like earthquakes, tsunamis, and hurricanes.",
+                howToPlay: "Survive waves of natural disasters, reach safe zones, help other players, and complete challenges to earn rewards and badges.",
+                requirements: {
+                    cpu: "Intel i5 / AMD Ryzen 5",
+                    ram: "6 GB",
+                    gpu: "GTX 1050 Ti / RX 570",
+                    storage: "4 GB"
+                },
+                wiki: "https://roblox.fandom.com/wiki/Natural_Disaster_Survival"
             },
             fisch: {
-                title: '🎣 Fisch',
-                description: 'Experience the joy of fishing in a beautiful virtual world. Catch various fish species, complete fishing quests, and unlock new fishing spots. A peaceful and engaging fishing simulator.',
-                howToPlay: '1. Cast your fishing rod\n2. Wait for fish to bite\n3. Reel in carefully\n4. Collect and sell your fish\n5. Unlock new areas',
-                requirements: 'Minimum: 2GB RAM, Intel Core i5, 6GB Storage\nRecommended: 6GB RAM, RTX 1050, 12GB SSD',
-                wiki: 'https://roblox.fandom.com/wiki/Fisch'
+                name: "Fisch",
+                intro: "Fisch is a peaceful fishing game where you can explore beautiful water environments, catch rare fish, and participate in fishing competitions.",
+                howToPlay: "Cast your fishing line, wait for fish to bite, reel in catches, collect rare fish species, and complete fishing quests for rewards.",
+                requirements: {
+                    cpu: "Intel i3 / AMD Ryzen 3",
+                    ram: "4 GB",
+                    gpu: "Integrated Graphics",
+                    storage: "3 GB"
+                },
+                wiki: "https://roblox.fandom.com/wiki/Fisch"
             },
             rivals: {
-                title: '⚔️ Roblox Rivals',
-                description: 'An intense competitive action game with fast-paced combat. Choose your character, master powerful abilities, and compete against other players in epic battles. Requires higher PC specifications for smooth gameplay.',
-                howToPlay: '1. Choose your character\n2. Learn unique abilities\n3. Enter competitive arenas\n4. Defeat opponents\n5. Earn ranks and rewards',
-                requirements: 'Minimum: 8GB RAM, RTX 2060, 15GB Storage\nRecommended: 16GB RAM, RTX 3070, 25GB SSD',
-                wiki: 'https://roblox.fandom.com/wiki/Roblox_Rivals'
+                name: "Roblox Rivals",
+                intro: "An intense competitive battle game featuring fast-paced combat, strategic gameplay, and challenging PvP matches against players worldwide.",
+                howToPlay: "Join matches, develop combat strategies, level up your character, unlock new abilities, and compete in ranked tournaments for glory.",
+                requirements: {
+                    cpu: "Intel i7 / AMD Ryzen 7",
+                    ram: "16 GB",
+                    gpu: "GTX 1660 / RTX 3060",
+                    storage: "8 GB"
+                },
+                wiki: "https://roblox.fandom.com/wiki/Roblox_Rivals"
             },
             brookhaven: {
-                title: '🏡 Brookhaven',
-                description: 'Engage in free-form roleplay in a suburban town setting. Create your story, live in houses, drive cars, and interact with other players. Express your creativity in this open-ended experience.',
-                howToPlay: '1. Create your character\n2. Choose a house\n3. Interact with other players\n4. Complete mini-games\n5. Roleplay your unique story',
-                requirements: 'Minimum: 2GB RAM, Intel Core i5, 7GB Storage\nRecommended: 6GB RAM, RTX 1050, 12GB SSD',
-                wiki: 'https://roblox.fandom.com/wiki/Brookhaven_rp'
+                name: "Brookhaven",
+                intro: "A life simulation and roleplay game where you can live in a virtual town, customize your house, and interact with other players.",
+                howToPlay: "Explore the town, purchase and decorate your house, get jobs, roleplay with friends, and participate in community events.",
+                requirements: {
+                    cpu: "Intel i3 / AMD Ryzen 3",
+                    ram: "6 GB",
+                    gpu: "GTX 960 / RX 480",
+                    storage: "4 GB"
+                },
+                wiki: "https://roblox.fandom.com/wiki/Brookhaven"
             }
         };
 
-        // Function to select and display game details
-        function selectGame(gameKey) {
-            const game = gamesData[gameKey];
-            document.getElementById('gameTitle').textContent = game.title;
-            document.getElementById('gameDescription').textContent = game.description;
-            document.getElementById('gameHowToPlay').textContent = game.howToPlay;
-            document.getElementById('gameRequirements').textContent = game.requirements;
-            document.getElementById('wikiLink').href = game.wiki;
+        function selectGame(gameId) {
+            const game = gamesData[gameId];
+            if (!game) return;
 
+            document.getElementById('gameTitle').textContent = game.name;
+            
+            const requirementsHTML = `
+                <div style="margin-top: 15px;">
+                    <strong style="color: var(--primary-cyan);">PC Requirements:</strong>
+                    <ul style="margin-top: 10px;">
+                        <li><strong>CPU:</strong> ${game.requirements.cpu}</li>
+                        <li><strong>RAM:</strong> ${game.requirements.ram}</li>
+                        <li><strong>GPU:</strong> ${game.requirements.gpu}</li>
+                        <li><strong>Storage:</strong> ${game.requirements.storage}</li>
+                    </ul>
+                </div>
+            `;
+
+            document.getElementById('gameContent').innerHTML = `
+                <div>
+                    <h6 style="color: var(--primary-magenta); margin-top: 15px;">Introduction:</h6>
+                    <p>${game.intro}</p>
+
+                    <h6 style="color: var(--primary-magenta); margin-top: 15px;">How to Play:</h6>
+                    <p>${game.howToPlay}</p>
+
+                    ${requirementsHTML}
+                </div>
+            `;
+
+            document.getElementById('wikiButton').setAttribute('data-wiki-url', game.wiki);
+
+            // Show modal using Bootstrap 5
             const modal = new bootstrap.Modal(document.getElementById('gameDetailsModal'));
             modal.show();
         }
+
+        function openWiki() {
+            const wikiUrl = document.getElementById('wikiButton').getAttribute('data-wiki-url');
+            if (wikiUrl) {
+                window.open(wikiUrl, '_blank');
+            }
+        }
+
+        // Carousel functionality
+        const carouselItems = document.querySelectorAll('.carousel-item');
+        let currentCarouselIndex = 0;
+
+        function showCarouselSlide(index) {
+            carouselItems.forEach(item => item.classList.remove('active'));
+            carouselItems[index].classList.add('active');
+        }
+
+        document.getElementById('carouselPrev')?.addEventListener('click', () => {
+            currentCarouselIndex = (currentCarouselIndex - 1 + carouselItems.length) % carouselItems.length;
+            showCarouselSlide(currentCarouselIndex);
+        });
+
+        document.getElementById('carouselNext')?.addEventListener('click', () => {
+            currentCarouselIndex = (currentCarouselIndex + 1) % carouselItems.length;
+            showCarouselSlide(currentCarouselIndex);
+        });
 
         // Smooth scroll for navigation
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -675,6 +975,118 @@
                     e.preventDefault();
                 }
             });
+        });
+
+        // Music Player functionality
+        const musicPlaylist = [
+            { 
+                title: 'NCS Track 1', 
+                url: 'https://ncs.io/track/download/5c18afc2-c39c-4844-a08b-4c14e91d19fd',
+                artist: 'NCS'
+            },
+            { 
+                title: 'NCS Track 2', 
+                url: 'https://ncs.io/track/download/af3e020d-b90d-439a-9106-76eb863784eb',
+                artist: 'NCS'
+            }
+        ];
+
+        let currentTrackIndex = 0;
+        let isPlaying = false;
+
+        function initMusicPlayer() {
+            const playlistEl = document.getElementById('playlist');
+            musicPlaylist.forEach((track, index) => {
+                const li = document.createElement('li');
+                li.className = 'playlist-item' + (index === 0 ? ' playing' : '');
+                li.innerHTML = `<i class="fas fa-music"></i> ${track.title}`;
+                li.onclick = () => selectTrack(index);
+                playlistEl.appendChild(li);
+            });
+            
+            // Initialize audio player
+            const audio = document.getElementById('audioPlayer');
+            audio.src = musicPlaylist[0].url;
+            updateTrackInfo();
+            
+            // Auto-play next track when current one ends
+            audio.addEventListener('ended', function() {
+                nextTrack();
+            });
+        }
+
+        function togglePlayer() {
+            const playerContent = document.getElementById('playerContent');
+            const expandBtn = document.getElementById('expandBtn');
+            const musicPlayer = document.getElementById('musicPlayer');
+            playerContent.classList.toggle('show');
+            expandBtn.classList.toggle('active');
+            musicPlayer.classList.toggle('expanded');
+        }
+
+        function togglePlayPause() {
+            const audio = document.getElementById('audioPlayer');
+            const btn = document.getElementById('playPauseBtn');
+            
+            if (isPlaying) {
+                audio.pause();
+                btn.innerHTML = '<i class="fas fa-play"></i> Play';
+                isPlaying = false;
+            } else {
+                audio.play();
+                btn.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                isPlaying = true;
+            }
+        }
+
+        function selectTrack(index) {
+            currentTrackIndex = index;
+            updatePlaylistUI();
+            updateTrackInfo();
+            const audio = document.getElementById('audioPlayer');
+            audio.src = musicPlaylist[index].url;
+            audio.play();
+            isPlaying = true;
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i> Pause';
+        }
+
+        function nextTrack() {
+            currentTrackIndex = (currentTrackIndex + 1) % musicPlaylist.length;
+            selectTrack(currentTrackIndex);
+        }
+
+        function previousTrack() {
+            currentTrackIndex = (currentTrackIndex - 1 + musicPlaylist.length) % musicPlaylist.length;
+            selectTrack(currentTrackIndex);
+        }
+
+        function updatePlaylistUI() {
+            const items = document.querySelectorAll('.playlist-item');
+            items.forEach((item, index) => {
+                item.classList.toggle('playing', index === currentTrackIndex);
+            });
+        }
+
+        function updateTrackInfo() {
+            const track = musicPlaylist[currentTrackIndex];
+            document.getElementById('trackInfo').textContent = `${track.title} - ${track.artist}`;
+        }
+
+        function setVolume(value) {
+            const audio = document.getElementById('audioPlayer');
+            audio.volume = value / 100;
+            document.getElementById('volumeValue').textContent = value + '%';
+        }
+
+        // Initialize music player when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            initMusicPlayer();
+            // Auto-play background music
+            const audio = document.getElementById('audioPlayer');
+            audio.volume = 0.5; // Set default volume to 50%
+            audio.play();
+            isPlaying = true;
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i> Pause';
         });
     </script>
 </body>
